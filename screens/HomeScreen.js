@@ -1,83 +1,44 @@
 import React from "react";
-import {
-  SafeAreaView,
-  Text,
-  FlatList,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { FlatList, StatusBar } from "react-native";
 import axios from "axios";
 import { AppContext } from "./../context";
+import FlatListItem from "./../components/FlatListItem";
 
 export default function HomeScreen() {
   const [data, setData] = React.useState([]);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
   const Context = React.useContext(AppContext);
 
   async function getData() {
+    setIsRefreshing(true);
     let res = await axios(
       "https://corona-ampel.gv.at/sites/corona-ampel.gv.at/files/assets/Warnstufen_Corona_Ampel_aktuell.json"
     );
     setData(res.data.warnstufen);
-  }
-  const dim = useWindowDimensions();
-
-  function getColor(warnstufe) {
-    if (warnstufe == 1) {
-      return "#0CE862";
-    } else if (warnstufe == 2) {
-      return "#FFFF00";
-    } else if (warnstufe == 3) {
-      return "#FF970C";
-    } else if (warnstufe == 4) {
-      return "#FF002E";
-    }
+    setIsRefreshing(false);
   }
 
   function renderItem({ item }) {
-    return (
-      <View
-        style={{
-          width: (dim.width / 100) * 90,
-          paddingTop: 20,
-          paddingBottom: 20,
-          borderRadius: 10,
-          backgroundColor: Context.theme.colors.card,
-          marginTop: 20,
-          flexDirection: "row",
-          alignContent: "center"
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: getColor(item.warnstufe),
-            width: 30,
-            height: 30,
-            marginLeft: 20,
-            borderRadius: 25,
-          }}
-        />
-        <View style={{ justifyContent: "center", marginLeft: 20 }}>
-          <Text style={{ fontFamily: "Jost_500Medium", fontSize: 18 }}>
-            {item.name}
-          </Text>
-          <Text style={{ fontFamily: "Jost_300Light", fontSize: 12 }}>
-            {item.region}
-          </Text>
-        </View>
-      </View>
-    );
+    return <FlatListItem item={item} />;
   }
   React.useEffect(() => {
     getData();
   }, []);
   return (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.name}
-      contentContainerStyle={{
-        alignItems: "center",
-      }}
-    />
+    <>
+      <StatusBar barStyle={"default"} />
+      <FlatList
+        data={data}
+        refreshing={isRefreshing}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.name}
+        onRefresh={getData}
+        contentContainerStyle={{
+          alignItems: "center",
+          backgroundColor: Context.theme.colors.backgroundColor,
+          paddingBottom: 30,
+        }}
+      />
+    </>
   );
 }

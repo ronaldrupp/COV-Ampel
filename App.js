@@ -7,7 +7,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AppProvider } from "./context";
 import Navigation from "./navigation/Navigation";
 import { LightTheme, DarkTheme } from "./themes";
-
+import RootNavigation from './navigation/RootNavigation';
 import {
   useFonts,
   Jost_100Thin,
@@ -62,7 +62,7 @@ export default function App() {
         <NavigationContainer
           theme={colorScheme == "light" ? LightTheme : DarkTheme}
         >
-          <Navigation />
+          <RootNavigation />
         </NavigationContainer>
       </AppProvider>
     );
