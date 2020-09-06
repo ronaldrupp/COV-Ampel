@@ -23,7 +23,7 @@ export default function HomeScreen() {
 
   function getColor(warnstufe) {
     if (warnstufe == 1) {
-      return "rgb(0,255,20)";
+      return "#0CE862";
     } else if (warnstufe == 2) {
       return "#FFFF00";
     } else if (warnstufe == 3) {
@@ -44,7 +44,7 @@ export default function HomeScreen() {
           backgroundColor: Context.theme.colors.card,
           marginTop: 20,
           flexDirection: "row",
-          alignContent: "center",
+          alignContent: "center"
         }}
       >
         <View
@@ -55,17 +55,21 @@ export default function HomeScreen() {
             marginLeft: 20,
             borderRadius: 25,
           }}
-        ></View>
+        />
         <View style={{ justifyContent: "center", marginLeft: 20 }}>
-          <Text>{item.name}</Text>
-          <Text>{item.region}</Text>
+          <Text style={{ fontFamily: "Jost_500Medium", fontSize: 18 }}>
+            {item.name}
+          </Text>
+          <Text style={{ fontFamily: "Jost_300Light", fontSize: 12 }}>
+            {item.region}
+          </Text>
         </View>
       </View>
     );
   }
   React.useEffect(() => {
     getData();
-  });
+  }, []);
   return (
     <FlatList
       data={data}
